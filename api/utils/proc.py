@@ -2,12 +2,14 @@ import psutil
 
 from typing import List
 
+from api.utils.types import ProcType
+
 
 class TopProcess:
     MAX_OUTPUT = 10
 
     @classmethod
-    def _get_process_list(cls) -> List[dict]:
+    def _get_process_list(cls) -> List[ProcType]:
         proc_list = []
 
         for proc in psutil.process_iter():
@@ -21,13 +23,13 @@ class TopProcess:
         return proc_list
 
     @classmethod
-    def cpu_sorted(cls) -> List[dict]:
+    def cpu_sorted(cls) -> List[ProcType]:
         s = sorted(cls._get_process_list(), key=lambda x: x['cpu_percent'], reverse=True)
         i = min(len(s), cls.MAX_OUTPUT)
         return s[0: i]
 
     @classmethod
-    def mem_sorted(cls) -> List[dict]:
+    def mem_sorted(cls) -> List[ProcType]:
         s = sorted(cls._get_process_list(), key=lambda x: x['vms'], reverse=True)
         i = min(len(s), cls.MAX_OUTPUT)
         return s[0: i]

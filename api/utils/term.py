@@ -4,6 +4,8 @@ from typing import List
 from datetime import datetime
 from subprocess import Popen, PIPE
 
+from .types import TermType
+
 
 class Terminal:
     def __init__(self):
@@ -42,42 +44,47 @@ class Terminal:
         self.fw.close()
         if self.alive():
             self.process.kill()
-        os.remove('/tmp/{}'.format(self.id))
+        try:
+            os.remove('/tmp/{}'.format(self.id))
+        except OSError:
+            pass
 
-    def serialize(self) -> dict:
+    def serialize(self) -> TermType:
         return {
             'id': self.id,
-            'created': self.created,
-            'updated': self.updated
+            'created': self.created.strftime('%c'),
+            'updated': self.updated.strftime('%c')
         }
 
 
 class TerminalManager:
-    TERM_POOL = []
     TERM_MAX = 5
 
+    def __init__(self):
+        self.term_pool: List[Terminal] = []
+
     def create(self) -> str:
-        if len(self.TERM_POOL) >= self.TERM_MAX:
+        if len(self.term_pool) >= self.TERM_MAX:
             raise TooMuchTerminal(self.TERM_MAX)
 
         new_term = Terminal()
-        self.TERM_POOL.append(new_term)
+        self.term_pool.append(new_term)
         return new_term.id
 
-    def get_terminal(self, term_id: str) -> Terminal or None:
-        for term in self.TERM_POOL:
+    def get(self, term_id: str) -> Terminal or None:
+        for term in self.term_pool:
             if term.id == term_id:
                 return term
-        raise None
+        return None
 
     def terminate(self, term_id: str):
-        term = self.get_terminal(term_id)
+        term = self.get(term_id)
         if term is not None:
             term.cleanup()
-            self.TERM_POOL.remove(term)
+            self.term_pool.remove(term)
 
-    def serialize(self) -> List[dict]:
-        return [term.serialize() for term in self.TERM_POOL]
+    def serialize(self) -> List[TermType]:
+        return [term.serialize() for term in self.term_pool]
 
 
 class TooMuchTerminal(Exception):
@@ -88,4 +95,3 @@ class TooMuchTerminal(Exception):
 class ExitedTerminal(Exception):
     def __init__(self, term_id: str):
         super().__init__('terminal already exited: id={}'.format(term_id))
-

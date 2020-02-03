@@ -2,6 +2,7 @@ import time
 import psutil
 from typing import List
 
+from .types import SystemInfoType, SystemStatusType
 from .common import find_line, find_value
 
 
@@ -44,7 +45,7 @@ class SystemInfo:
             return cls.DIST_ERR
 
     @classmethod
-    def serialize(cls) -> dict:
+    def serialize(cls) -> SystemInfoType:
         return {
             'rpi': cls.rpi(),
             'cpu': cls.cpu(),
@@ -82,7 +83,7 @@ class SystemStatus:
         return time.strftime('%c')
 
     @classmethod
-    def serialize(cls) -> dict:
+    def serialize(cls) -> SystemStatusType:
         return {
             'using_mem': cls.using_mem(),
             'num_proc': cls.num_proc(),

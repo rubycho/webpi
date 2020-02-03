@@ -2,6 +2,7 @@ import pigpio
 from pigpio import error
 
 from typing import List
+from api.utils.types import PinType
 
 
 class GPIOControl:
@@ -26,14 +27,9 @@ class GPIOGetter(GPIOControl):
             return 'HW_PWM'
 
     @classmethod
-    def mode(cls, pin: int) -> str:
+    def mode(cls, pin: int) -> int:
         cls.allowed_pin_or_raise(pin)
-        mode = cls.gpio.get_mode(pin)
-        if mode is pigpio.INPUT:
-            return 'INPUT'
-        elif mode is pigpio.OUTPUT:
-            return 'OUTPUT'
-        return 'ALT'
+        return cls.gpio.get_mode(pin)
 
     @classmethod
     def value(cls, pin: int) -> int:
@@ -60,11 +56,11 @@ class GPIOGetter(GPIOControl):
         return cls.gpio.get_PWM_dutycycle(pin) if cls.pwm(pin) else 0
 
     @classmethod
-    def list(cls) -> List[dict]:
+    def list(cls) -> List[PinType]:
         return [cls.get(pin) for pin in cls.GENERAL_PINS + cls.HW_PWM_PINS]
 
     @classmethod
-    def get(cls, pin: int) -> dict:
+    def get(cls, pin: int) -> PinType:
         cls.allowed_pin_or_raise(pin)
         return {
             'pin': pin,
@@ -79,7 +75,7 @@ class GPIOGetter(GPIOControl):
 
 class GPIOSetter(GPIOControl):
     @classmethod
-    def mode(cls, pin: int, out: bool):
+    def mode(cls, pin: int, out: int):
         cls.allowed_pin_or_raise(pin)
         if out:
             cls.gpio.set_mode(pin, pigpio.OUTPUT)
@@ -87,10 +83,10 @@ class GPIOSetter(GPIOControl):
             cls.gpio.set_mode(pin, pigpio.INPUT)
 
     @classmethod
-    def value(cls, pin: int, on: bool):
+    def value(cls, pin: int, on: int):
         cls.allowed_pin_or_raise(pin)
         cls.gpio.set_mode(pin, pigpio.OUTPUT)
-        cls.gpio.write(pin, int(on))
+        cls.gpio.write(pin, int(bool(on)))
 
     @classmethod
     def pwm_freq(cls, pin: int, freq: int):

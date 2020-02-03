@@ -2,13 +2,15 @@ import os
 import time
 import shutil
 import pathlib
+from typing import List
 
 from django.core.files.uploadedfile import UploadedFile
+from api.utils.types import FileType
 
 
 class FileHandler:
     @classmethod
-    def list(cls, path: str):
+    def list(cls, path: str) -> List[FileType]:
         file_list = []
         for file in pathlib.Path(path).iterdir():
             file_list.append(
@@ -47,7 +49,10 @@ class FileHandler:
     @classmethod
     def delete(cls, path: str) -> bool:
         try:
-            shutil.rmtree(path)
+            if os.path.isdir(path):
+                shutil.rmtree(path)
+            else:
+                os.unlink(path)
             return True
         except OSError:
             return False
