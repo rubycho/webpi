@@ -16,14 +16,22 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from api.views import index, pi_info, pi_status, proc_cpu, proc_mem
+from api.views.static import index, pi_info, pi_status, proc_cpu, proc_mem
+from api.views.disk import list_dir, create_dir, download_file, upload_file, delete_item
 
 
 urlpatterns = [
     path('', index, name='index'),
     path('admin/', admin.site.urls),
-    path('pi-info/', pi_info, name='pi-status'),
-    path('pi-status/', pi_status, name='pi-status'),
-    path('proc-cpu/', proc_cpu, name='proc-cpu'),
-    path('proc-mem/', proc_mem, name='proc-mem')
+
+    path('sys/pi-info/', pi_info, name='pi-status'),
+    path('sys/pi-status/', pi_status, name='pi-status'),
+    path('sys/proc-cpu/', proc_cpu, name='proc-cpu'),
+    path('sys/proc-mem/', proc_mem, name='proc-mem'),
+
+    path('disk/download/', download_file, name='download-file'),
+    path('disk/upload/', upload_file, name='upload-file'),
+    path('disk/list/', list_dir, name='list-dir'),
+    path('disk/create-dir/', create_dir, name='create-dir'),
+    path('disk/delete/', delete_item, name='delete-item')
 ]

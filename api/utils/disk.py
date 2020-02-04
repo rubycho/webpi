@@ -29,6 +29,10 @@ class FileHandler:
         return os.path.exists(path)
 
     @classmethod
+    def is_dir(cls, path: str) -> bool:
+        return os.path.isdir(path)
+
+    @classmethod
     def create_file(cls, path: str, file: UploadedFile) -> bool:
         try:
             with open(os.path.join(path, file.name), 'wb') as f:
