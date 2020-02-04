@@ -16,6 +16,14 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from api.views import index, pi_info, pi_status, proc_cpu, proc_mem
+
+
 urlpatterns = [
+    path('', index, name='index'),
     path('admin/', admin.site.urls),
+    path('pi-info/', pi_info, name='pi-status'),
+    path('pi-status/', pi_status, name='pi-status'),
+    path('proc-cpu/', proc_cpu, name='proc-cpu'),
+    path('proc-mem/', proc_mem, name='proc-mem')
 ]
