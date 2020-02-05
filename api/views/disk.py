@@ -1,3 +1,5 @@
+import os
+
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -15,8 +17,7 @@ def download_file(request):
         return missing_keys(DataType.QUERY, missing)
 
     path = data.get('path')
-    if (not FileHandler.exists(path)) or \
-            FileHandler.is_dir(path):
+    if not os.path.isfile(path):
         return wrong_keys(DataType.QUERY, ['path'])
 
     return FileResponse(open(path, 'rb'))
@@ -29,8 +30,7 @@ def list_dir(request):
         return missing_keys(DataType.QUERY, missing)
 
     path = data.get('path')
-    if (not FileHandler.exists(path)) or \
-            (not FileHandler.is_dir(path)):
+    if not os.path.isdir(path):
         return wrong_keys(DataType.QUERY, ['path'])
 
     return Response(FileHandler.list(path))
@@ -47,8 +47,7 @@ def upload_file(request):
     if not file:
         return wrong_keys(DataType.BODY, ['file'])
 
-    if (not FileHandler.exists(path)) or \
-            (not FileHandler.is_dir(path)):
+    if not os.path.isdir(path):
         return wrong_keys(DataType.BODY, ['path'])
 
     result = FileHandler.create_file(path, file)
@@ -66,8 +65,7 @@ def create_dir(request):
 
     path = data.get('path')
     dirname = data.get('dirname')
-    if (not FileHandler.exists(path)) or \
-            (not FileHandler.is_dir(path)):
+    if not os.path.isdir(path):
         return wrong_keys(DataType.BODY, ['path'])
 
     if dirname.find('/') >= 0 or \

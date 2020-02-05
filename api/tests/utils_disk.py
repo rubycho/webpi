@@ -15,14 +15,6 @@ class DiskTest(TestCase):
         result = FileHandler.list(self.TEST_PATH)
         self.assertEqual(file_cnt, len(result))
 
-    def test_exists(self):
-        test_file = str(os.path.join(self.TEST_PATH, 'test_exists.txt'))
-
-        Path(test_file).touch()
-        self.assertTrue(FileHandler.exists(test_file))
-        Path(test_file).unlink()
-        self.assertFalse(FileHandler.exists(test_file))
-
     def test_create_file(self):
         test_file_name = 'test_create_file.txt'
         test_file = str(os.path.join(self.TEST_PATH, test_file_name))
