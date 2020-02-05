@@ -8,6 +8,7 @@ from rest_framework.response import Response
 
 class DataType(enum.Enum):
     QUERY = 'query'
+    PARAM = 'param'
     BODY = 'body'
 
 
