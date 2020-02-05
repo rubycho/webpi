@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from django.urls import path
 from django.http.response import FileResponse
 
 from api.utils.disk import FileHandler
@@ -91,3 +92,12 @@ def delete_item(request):
         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response(status=status.HTTP_200_OK)
+
+
+disk_url_patterns = [
+    path('disk/download/', download_file, name='download-file'),
+    path('disk/upload/', upload_file, name='upload-file'),
+    path('disk/list/', list_dir, name='list-dir'),
+    path('disk/create-dir/', create_dir, name='create-dir'),
+    path('disk/delete/', delete_item, name='delete-item')
+]

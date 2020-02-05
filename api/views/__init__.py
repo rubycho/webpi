@@ -1,1 +1,2 @@
-from .static import index, pi_info, pi_status, proc_cpu, proc_mem
+from .static import static_url_patterns
+from .disk import disk_url_patterns
