@@ -2,8 +2,27 @@
 
 Raspberry PI Controllable API. (Graduation Project)
 
-## This Provides
-- give me contents
+## This API Provides (will)
+
+- File Management
+    - file(s) information on directory (like `ls -al`)
+    - download and upload file
+    - create directory
+    - delete file or directory
+- GPIO Management
+    - gpio pin(s) status (**only general + hw_pwm pins**)
+    - set mode of pin
+    - set output value of pin
+    - set pwm dutycycle and frequency of pin
+- PI Infomation
+    - PI spec
+    - PI status (i.e. time, memory used, # of procs)
+    - process information (Top 10 CPU/MEM using processes)
+- Simple Terminal
+    - create subprocess (`bash`)
+    - make input to subprocess
+    - get output from subprocess
+    - kill subprocess
 
 ## Test Environment
 
