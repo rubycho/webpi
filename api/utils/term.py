@@ -53,7 +53,8 @@ class Terminal:
         return {
             'id': self.id,
             'created': self.created.strftime('%c'),
-            'updated': self.updated.strftime('%c')
+            'updated': self.updated.strftime('%c'),
+            'alive': self.alive()
         }
 
 
