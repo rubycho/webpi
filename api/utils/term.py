@@ -1,5 +1,6 @@
 import os
 import time
+import uuid
 from typing import List
 from datetime import datetime
 from subprocess import Popen, PIPE
@@ -10,6 +11,7 @@ from .types import TermType
 class Terminal:
     def __init__(self):
         self.id = str(time.time())
+        self.password = str(uuid.uuid4())
         self.created = datetime.now()
         self.updated = datetime.now()
 

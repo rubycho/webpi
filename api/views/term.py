@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.urls import path
 
 from api.utils.term import TerminalManager, TooMuchTerminal, ExitedTerminal
-from .errors import missing_keys, wrong_keys, DataType
+from .errors import find_missing_keys, missing_keys, wrong_keys, DataType
 
 
 # TODO: lock method needed
@@ -19,7 +19,6 @@ def cleanup():
     tmp = copy.copy(manager.term_pool)
     for term in tmp:
         manager.terminate(term.id)
-    print("Successfully cleaned terminals")
 
 
 class TerminalList(APIView):
@@ -28,9 +27,10 @@ class TerminalList(APIView):
 
     def post(self, request):
         try:
-            return Response(manager.get(
-                manager.create()
-            ).serialize())
+            term = manager.get(manager.create())
+            data = term.serialize()
+            data['password'] = term.password
+            return Response(data)
         except TooMuchTerminal:
             return Response(status=status.HTTP_503_SERVICE_UNAVAILABLE)
 
@@ -47,10 +47,15 @@ class TerminalDetail(APIView):
         if term is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        req_type = request.data.get('type')
-        if not req_type:
-            return missing_keys(DataType.BODY, ['type'])
+        missing, data = find_missing_keys(request.data, ['type', 'password'])
+        if len(missing) > 0:
+            return missing_keys(DataType.BODY, missing)
 
+        # password check
+        if term.password != data.get('password'):
+            return wrong_keys(DataType.BODY, ['password'])
+
+        req_type = data.get('type')
         if req_type == 'stdin':
             uinput = request.data.get('input')
             if uinput is None:
