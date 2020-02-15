@@ -32,14 +32,6 @@ pip install -r requirements.txt
 pip install mod_wsgi
 
 step=$((step+1))
-echo "[Step ${step}]: create admin user."
-
-python manage.py makemigrations
-python manage.py migrate
-
-python manage.py createsuperuser
-
-step=$((step+1))
 echo "[Step ${step}]: enable pigpiod."
 
 wget https://raw.githubusercontent.com/joan2937/pigpio/master/util/pigpiod.service
@@ -49,6 +41,19 @@ sudo systemctl start pigpiod.service
 
 # cleanup
 rm pigpiod.service
+
+step=$((step+1))
+echo "[Step ${step}]: create admin user."
+
+python manage.py makemigrations
+python manage.py migrate
+
+python manage.py createsuperuser
+
+step=$((step+1))
+echo "[Step ${step}]: collect static files."
+
+python manage.py collectstatic
 
 step=$((step+1))
 echo "[Step ${step}]: enabling site."

@@ -2,7 +2,7 @@
 
 Raspberry PI Controllable API. (Graduation Project)
 
-## This API Provides (will)
+## This API Provides
 
 - File Management
     - file(s) information on directory (like `ls -al`)
@@ -36,18 +36,23 @@ Raspberry PI Controllable API. (Graduation Project)
 - `pigpio` for controlling gpio
 - `psutil` for retrieving process information
 
+## Install on PI
+
+Checkout as master branch and run the following:
+```bash
+/home/pi/webpi$ .script/install.sh
+```
+Installation may take minutes to complete.
+
 ## Run for dev purpose
 
 ```bash
-# (On PI) install and activate pigpio
-./install.sh
-
-# (On Computer) setup
+# setup
 virtualenv venv -p python3
 source venv/bin/activate
 pip install -r requirements.txt 
 
-# (On Computer) run
+# run
 export PIGPIO_ADDR={YOUR_PI_ADDR} 
 python manage.py runserver
 ```
