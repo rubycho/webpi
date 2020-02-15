@@ -13,9 +13,9 @@ step=1
 echo "[Step ${step}]: install apt packages."
 
 sudo apt update
-sudo apt install python3 python3-pip virtualenv
-sudo apt install pigpio python-pigpio python3-pigpio
-sudo apt install apache2 libapache2-mod-wsgi-py3
+sudo apt -y install python3 python3-pip virtualenv
+sudo apt -y install pigpio python-pigpio python3-pigpio
+sudo apt -y install apache2 apache2-dev libapache2-mod-wsgi-py3
 
 step=$((step+1))
 echo "[Step ${step}]: create venv and activate."
@@ -29,10 +29,13 @@ step=$((step+1))
 echo "[Step ${step}]: install pip packages."
 
 pip install -r requirements.txt
-pip install uwsgi
+pip install mod_wsgi
 
 step=$((step+1))
 echo "[Step ${step}]: create admin user."
+
+python manage.py makemigrations
+python manage.py migrate
 
 python manage.py createsuperuser
 
