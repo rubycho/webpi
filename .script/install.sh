@@ -51,13 +51,16 @@ step=$((step+1))
 echo "[Step ${step}]: enabling site."
 
 sudo service apache2 start
+
 sudo cp .prod/webpi.conf /etc/apache2/sites-available/
 sudo a2ensite webpi
+sudo service apache2 restart
+
+sleep 1
 
 chmod 664 ./db.sqlite3
 sudo chown :www-data ./db.sqlite3
 sudo chown :www-data ./
-sudo service apache2 restart
 
 echo "============================"
 echo "All step completed."
