@@ -16,6 +16,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from rest_framework.authtoken import views
+from api.views import static_url_patterns, disk_url_patterns, \
+    gpio_url_patterns, term_url_patterns
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', views.obtain_auth_token, name='auth')
 ]
+urlpatterns += static_url_patterns
+urlpatterns += disk_url_patterns
+urlpatterns += gpio_url_patterns
+urlpatterns += term_url_patterns
