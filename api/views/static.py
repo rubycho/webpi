@@ -13,21 +13,45 @@ def index(request):
 
 @api_view(http_method_names=['GET'])
 def pi_info(request):
+    """
+    Pi Info(Spec) API
+
+    - Response
+        - 200: SystemInfoType
+    """
     return Response(SystemInfo.serialize())
 
 
 @api_view(http_method_names=['GET'])
 def pi_status(request):
+    """
+    Pi Status API
+
+    - Response
+        - 200: SystemStatusType
+    """
     return Response(SystemStatus.serialize())
 
 
 @api_view(http_method_names=['GET'])
 def proc_cpu(request):
+    """
+    CPU-Sorted Top 10 Process List API
+
+    - Response
+        - 200: [ProcType,]
+    """
     return Response(TopProcess.cpu_sorted())
 
 
 @api_view(http_method_names=['GET'])
 def proc_mem(request):
+    """
+    Memory-sorted Top 10 Process List API
+
+    - Response
+        - 200: [ProcType,]
+    """
     return Response(TopProcess.mem_sorted())
 
 

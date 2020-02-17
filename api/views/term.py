@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from django.urls import path
 
 from api.utils.term import TerminalManager, TooMuchTerminal, ExitedTerminal
-from .errors import find_missing_keys, missing_keys, wrong_keys, DataType
+from .errors import extract_data, missing_keys, wrong_keys, DataType
 
 
 # TODO: lock method needed
@@ -16,6 +16,9 @@ manager = TerminalManager()
 
 
 def cleanup():
+    """
+    Cleans up existing terminals before exit.
+    """
     tmp = copy.copy(manager.term_pool)
     for term in tmp:
         manager.terminate(term.id)
@@ -23,9 +26,22 @@ def cleanup():
 
 class TerminalList(APIView):
     def get(self, request):
+        """
+        Terminal Status List API
+
+        - Response
+            - 200: [TermType,]
+        """
         return Response(manager.serialize())
 
     def post(self, request):
+        """
+        Terminal Creation API
+
+        - Response
+            - 200: TermType, with password
+            - 503: Results if TerminalManager.TERM_MAX terminals are running
+        """
         try:
             term = manager.get(manager.create())
             data = term.serialize()
@@ -37,17 +53,53 @@ class TerminalList(APIView):
 
 class TerminalDetail(APIView):
     def get(self, request, term_id: str):
+        """
+        Terminal Status API
+
+        - Param
+            - term_id: string, Terminal's id
+
+        - Response
+            - 200: TermType
+            - 404: Results if there is no such terminal with provided id
+        """
         term = manager.get(term_id)
         if term is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
         return Response(term.serialize())
 
     def put(self, request, term_id: str):
+        """
+        Terminal Communication API
+
+        - Param
+            - term_id: string, Terminal's id
+
+        - Body Type 1
+            - type: 'stdin'
+            - password: string, password which is provided on creation
+            - input: string, command to execute
+
+        - Response for Type 1
+            - 200: Empty
+            - 500: Results if terminal's subprocess (bash) has exited
+
+        - Body Type 2
+            - type: 'stdout'
+            - password: string, password which is provided on creation
+
+        - Response for Type 2
+            - 200: string, stdout
+
+        - Response
+            - 400: Results if body is incomplete or invalid
+            - 404: Results if there is no such terminal with provided id
+        """
         term = manager.get(term_id)
         if term is None:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-        missing, data = find_missing_keys(request.data, ['type', 'password'])
+        missing, data = extract_data(request.data, ['type', 'password'])
         if len(missing) > 0:
             return missing_keys(DataType.BODY, missing)
 
@@ -72,6 +124,16 @@ class TerminalDetail(APIView):
             return wrong_keys(DataType.BODY, ['type'])
 
     def delete(self, request, term_id: str):
+        """
+        Terminal Termination API
+
+        - Param
+            - term_id: string, Terminal's id
+
+        - Respnose
+            - 200: Empty
+            - 404: Results if there is no such terminal with provided id
+        """
         term = manager.get(term_id)
         if term is None:
             return Response(status=status.HTTP_404_NOT_FOUND)

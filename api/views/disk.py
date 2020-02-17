@@ -8,12 +8,22 @@ from django.urls import path
 from django.http.response import FileResponse
 
 from api.utils.disk import FileHandler
-from .errors import DataType, find_missing_keys, missing_keys, wrong_keys
+from .errors import DataType, extract_data, missing_keys, wrong_keys
 
 
 @api_view(http_method_names=['GET'])
 def download_file(request):
-    missing, data = find_missing_keys(request.GET, ['path'])
+    """
+    File Download API
+
+    - Query
+        - path: string, existing file's path
+
+    - Response
+        - 200: File
+        - 400: Results if query is missing or invalid
+    """
+    missing, data = extract_data(request.GET, ['path'])
     if len(missing) > 0:
         return missing_keys(DataType.QUERY, missing)
 
@@ -26,7 +36,17 @@ def download_file(request):
 
 @api_view(http_method_names=['GET'])
 def list_dir(request):
-    missing, data = find_missing_keys(request.GET, ['path'])
+    """
+    List Directory Contents API
+
+    - Query
+        - path: string, existing directory's path
+
+    - Response
+        - 200: [FileType,]
+        - 400: Results if query is missing or invalid
+    """
+    missing, data = extract_data(request.GET, ['path'])
     if len(missing) > 0:
         return missing_keys(DataType.QUERY, missing)
 
@@ -39,7 +59,19 @@ def list_dir(request):
 
 @api_view(http_method_names=['POST'])
 def upload_file(request):
-    missing, data = find_missing_keys(request.data, ['path', 'file'])
+    """
+    File Upload API
+
+    - Body
+        - path: string, existing directory's path
+        - file: File (multipart form-data)
+
+    - Response
+        - 200: Empty
+        - 400: Results if body is incomplete or invalid
+        - 500: Results if upload fails
+    """
+    missing, data = extract_data(request.data, ['path', 'file'])
     if len(missing) > 0:
         return missing_keys(DataType.BODY, missing)
 
@@ -60,7 +92,19 @@ def upload_file(request):
 
 @api_view(http_method_names=['POST'])
 def create_dir(request):
-    missing, data = find_missing_keys(request.data, ['path', 'dirname'])
+    """
+    Directory Creation API
+
+    - Body
+        - path: string, existing directory's path
+        - dirname: string, valid directory name that doesn't include slashes
+
+    - Response
+        - 200: Empty
+        - 400: Results if body is incomplete or invalid
+        - 500: Results if creation fails
+    """
+    missing, data = extract_data(request.data, ['path', 'dirname'])
     if len(missing) > 0:
         return missing_keys(DataType.BODY, missing)
 
@@ -82,7 +126,18 @@ def create_dir(request):
 
 @api_view(http_method_names=['POST'])
 def delete_item(request):
-    missing, data = find_missing_keys(request.data, ['path'])
+    """
+    File/Directory Deletion API
+
+    - Body
+        - path: string, existing file/directory's path
+
+    -Response
+        - 200: Empty
+        - 400: Results if body is incomplete or invalid
+        - 500: Results if deletion fails
+    """
+    missing, data = extract_data(request.data, ['path'])
     if len(missing) > 0:
         return missing_keys(DataType.BODY, missing)
 
