@@ -3,11 +3,12 @@
 Raspberry PI Controllable API. (Graduation Project)
 
 ## Check out!
-- [SPA Client (webpi-app)](https://github.com/rubycho/webpi-app)
 - [Endpoints (swagger)](https://app.swaggerhub.com/apis-docs/rubycho/webpi/1.0.0/)
+- [Installation (wiki)](https://github.com/rubycho/webpi/wiki/Installation)
 - [Authorization (wiki)](https://github.com/rubycho/webpi/wiki/Authorization)
 - [Error Responses (wiki)](https://github.com/rubycho/webpi/wiki/Error-Responses)
 - [GPIO Limitations (wiki)](https://github.com/rubycho/webpi/wiki/GPIO-Limitations)
+- [SPA Client (webpi-app)](https://github.com/rubycho/webpi-app)
 
 ## This API Provides
 
@@ -43,15 +44,7 @@ Raspberry PI Controllable API. (Graduation Project)
 - `pigpio` for controlling gpio
 - `psutil` for retrieving process information
 
-## Install on PI
-
-Checkout as master branch and run the following:
-```bash
-/home/pi/webpi$ .script/install.sh
-```
-Installation may take minutes to complete.
-
-## Run for dev purpose
+## Run for dev purpose (Ubuntu)
 
 ```bash
 # setup
