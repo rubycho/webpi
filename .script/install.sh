@@ -60,6 +60,10 @@ echo "[Step ${step}]: enabling site."
 
 sudo service apache2 start
 
+if ! grep -q ".env.prod" /etc/apache2/envvars; then
+  echo ". /home/pi/webpi/.envs/.env.prod" | sudo tee -a /etc/apache2/envvars 1>/dev/null
+fi
+
 sudo cp .prod/webpi.conf /etc/apache2/sites-available/
 sudo a2ensite webpi
 sudo service apache2 restart
