@@ -11,7 +11,7 @@ step=$((step+1))
 echo "[Step ${step}]: disabling site."
 
 sudo a2dissite webpi
-sudo service apache2 restart
+sudo service apache2 stop
 
 echo "============================"
 echo "All step completed."
