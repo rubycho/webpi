@@ -5,6 +5,7 @@ Raspberry PI Controllable API. (Graduation Project)
 ## Check out!
 - [Endpoints (swagger)](https://app.swaggerhub.com/apis-docs/rubycho/webpi/1.0.0/)
 - [Installation (wiki)](https://github.com/rubycho/webpi/wiki/Installation)
+- [Security Issues (wiki)](https://github.com/rubycho/webpi/wiki/Security-Issues)
 - [Authorization (wiki)](https://github.com/rubycho/webpi/wiki/Authorization)
 - [Error Responses (wiki)](https://github.com/rubycho/webpi/wiki/Error-Responses)
 - [GPIO Limitations (wiki)](https://github.com/rubycho/webpi/wiki/GPIO-Limitations)
