@@ -56,8 +56,15 @@ echo "[Step ${step}]: collect static files."
 python manage.py collectstatic
 
 step=$((step+1))
+echo "[Step ${step}]: create self-signed certificate."
+
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+ -keyout ./.cert/webpi.key -out ./.cert/webpi.crt
+
+step=$((step+1))
 echo "[Step ${step}]: enabling site."
 
+sudo a2enmod ssl
 sudo service apache2 start
 
 if ! grep -q ".env.prod" /etc/apache2/envvars; then
